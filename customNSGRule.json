@@ -1,0 +1,68 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "tags['SkipNSG']",
+          "exists": "false"
+        },
+        {
+          "value": "[resourceGroup().tags['SkipNSG']]",
+          "equals": ""
+        },
+        {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "field": "type",
+                  "equals": "Microsoft.Network/virtualNetworks/subnets"
+                },
+                {
+                  "not": {
+                    "field": "Microsoft.Network/virtualNetworks/subnets/networkSecurityGroup.id",
+                    "notIn": [
+                      "null",
+                      ""
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "field": "type",
+                  "equals": "Microsoft.Network/virtualNetworks/subnets"
+                },
+                {
+                  "field": "Microsoft.Network/virtualNetworks/subnets/networkSecurityGroup.id",
+                  "exists": "false"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "then": {
+      "effect": "[parameters('effect')]"
+    }
+  },
+  "parameters": {
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "Enable or disable the execution of the policy"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny",
+        "Disabled"
+      ],
+      "defaultValue": "Audit"
+    }
+  }
+}
