@@ -1,0 +1,36 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "in": [
+            "Microsoft.Compute/virtualMachines",
+            "Microsoft.Compute/VirtualMachineScaleSets"
+          ]
+        },
+        {
+          "anyOf": [
+            {
+              "field": "Microsoft.Compute/imageSku",
+              "like": "pro-18_04*"
+            },
+            {
+              "field": "Microsoft.Compute/imageSku",
+              "like": "pro-16_04*"
+            },
+            {
+              "field": "Microsoft.Compute/imageSku",
+              "like": "pro-14_04*"
+            }
+          ]
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  },
+  "parameters": {}
+}
